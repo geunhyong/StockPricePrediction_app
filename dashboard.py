@@ -7,28 +7,35 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 import streamlit as st
 
-def setup_environment():
-    # 1. 파일 경로를 확실하게 설정 (상대 경로가 아닌 절대 경로 방식)
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    font_path = os.path.join(base_dir, 'fonts', 'MALGUN.TTF')
-    
-    # 2. 폰트를 매니저에 강제 등록 (경로가 정확하므로 찾을 수 있음)
-    if os.path.exists(font_path):
-        fm.fontManager.addfont(font_path)
-        plt.rcParams['font.family'] = 'Malgun Gothic' # 폰트 내부 이름 확인 필요
-    else:
-        # 파일이 없을 경우를 대비한 시스템 폰트 대체제 (견고함)
-        plt.rcParams['font.family'] = 'sans-serif'
-        plt.rcParams['font.sans-serif'] = ['NanumGothic', 'DejaVu Sans']
+# 1. 절대 경로 설정 (가장 중요)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-    # 3. 마이너스 기호 설정
+# 2. 파일 경로 설정
+font_path = os.path.join(BASE_DIR, 'fonts', 'MALGUN.TTF')
+data_path = os.path.join(BASE_DIR, 'data', 'stock_data.csv')
+
+# 3. 폰트 초기화 (try-except로 앱 중단 방지)
+def setup_environment():
+    try:
+        if os.path.exists(font_path):
+            fm.fontManager.addfont(font_path)
+            plt.rcParams['font.family'] = 'Malgun Gothic'
+        else:
+            plt.rcParams['font.family'] = 'sans-serif'
+            plt.rcParams['font.sans-serif'] = ['NanumGothic', 'DejaVu Sans']
+    except Exception as e:
+        st.warning(f"폰트 설정 오류: {e}")
     plt.rcParams['axes.unicode_minus'] = False
 
-# 대시보드 실행 시 호출
 setup_environment()
 
-# 4. 데이터는 이렇게 가져오세요
-data_path = os.path.join(base_dir, 'data', 'stock_data.csv')
+    # 4. 마지막 줄에 있던 중복 선언(에러 유발 코드)은 삭제하세요!
+    # (아래 줄은 지우셔도 됩니다. 위에서 이미 정의했습니다.)
+    # data_path = os.path.join(base_dir, 'data', 'stock_data.csv')
+    # 함수 실행
+    setup_environment()
+    # 4. 데이터는 이렇게 가져오세요
+    data_path = os.path.join(BASE_DIR, 'data', 'stock_data.csv')
 # =========================================================
 # 프로젝트 공통 설정
 # =========================================================
