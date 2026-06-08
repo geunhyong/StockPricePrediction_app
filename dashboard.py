@@ -7,18 +7,16 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 import streamlit as st
 
-# 1. 절대 경로 설정 (가장 중요)
+# 1. 경로 설정
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FONT_PATH = os.path.join(BASE_DIR, 'fonts', 'MALGUN.TTF')
+DATA_PATH = os.path.join(BASE_DIR, 'data', 'stock_data.csv')
 
-# 2. 파일 경로 설정
-font_path = os.path.join(BASE_DIR, 'fonts', 'MALGUN.TTF')
-data_path = os.path.join(BASE_DIR, 'data', 'stock_data.csv')
-
-# 3. 폰트 초기화 (try-except로 앱 중단 방지)
+# 2. 폰트 설정 함수 정의
 def setup_environment():
     try:
-        if os.path.exists(font_path):
-            fm.fontManager.addfont(font_path)
+        if os.path.exists(FONT_PATH):
+            fm.fontManager.addfont(FONT_PATH)
             plt.rcParams['font.family'] = 'Malgun Gothic'
         else:
             plt.rcParams['font.family'] = 'sans-serif'
@@ -27,19 +25,17 @@ def setup_environment():
         st.warning(f"폰트 설정 오류: {e}")
     plt.rcParams['axes.unicode_minus'] = False
 
+
+# 3. 함수 실행 (들여쓰기 없이 맨 앞에 위치해야 함)
 setup_environment()
 
-    # 4. 마지막 줄에 있던 중복 선언(에러 유발 코드)은 삭제하세요!
-    # (아래 줄은 지우셔도 됩니다. 위에서 이미 정의했습니다.)
-    # data_path = os.path.join(base_dir, 'data', 'stock_data.csv')
-    # 함수 실행
-    setup_environment()
-    # 4. 데이터는 이렇게 가져오세요
-    data_path = os.path.join(BASE_DIR, 'data', 'stock_data.csv')
+
 # =========================================================
 # 프로젝트 공통 설정
 # =========================================================
+
 APP_TITLE = "투자자 심리지수 기반 주가 예측 대시보드"
+    
 PREDICTION_TARGET = "삼성전자"
 
 DATA_ASSETS = [
