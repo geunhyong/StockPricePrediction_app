@@ -3,7 +3,14 @@ import streamlit as st
 from log.introduction import render_introduction
 from log.process_flow import render_process_flow
 from tabs import data_preprocessing, modeling_validation, sentiment_proxy
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
+import streamlit as st
 
+# 폰트 설정
+font_path = 'fonts/NanumGothic.ttf'  # 위에서 만든 폴더의 폰트 경로
+font_name = fm.FontProperties(fname=font_path).get_name()
+plt.rc('font', family=font_name)
 
 # =========================================================
 # 프로젝트 공통 설정
