@@ -7,19 +7,28 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 import streamlit as st
 
-def set_font():
-    # 1. 폰트 패밀리 설정
-    plt.rcParams['font.family'] = 'sans-serif'
+def setup_environment():
+    # 1. 파일 경로를 확실하게 설정 (상대 경로가 아닌 절대 경로 방식)
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    font_path = os.path.join(base_dir, 'fonts', 'MALGUN.TTF')
     
-    # 2. 우선순위 설정: 나눔고딕 -> 기본 sans-serif
-    # 리눅스 서버(Streamlit Cloud)에 미리 설치된 폰트들을 활용합니다.
-    plt.rcParams['font.sans-serif'] = ['NanumGothic', 'DejaVu Sans', 'sans-serif']
-    
-    # 3. 마이너스 기호 깨짐 방지
+    # 2. 폰트를 매니저에 강제 등록 (경로가 정확하므로 찾을 수 있음)
+    if os.path.exists(font_path):
+        fm.fontManager.addfont(font_path)
+        plt.rcParams['font.family'] = 'Malgun Gothic' # 폰트 내부 이름 확인 필요
+    else:
+        # 파일이 없을 경우를 대비한 시스템 폰트 대체제 (견고함)
+        plt.rcParams['font.family'] = 'sans-serif'
+        plt.rcParams['font.sans-serif'] = ['NanumGothic', 'DejaVu Sans']
+
+    # 3. 마이너스 기호 설정
     plt.rcParams['axes.unicode_minus'] = False
 
-# 대시보드 실행 시 가장 먼저 호출하세요
-set_font()  
+# 대시보드 실행 시 호출
+setup_environment()
+
+# 4. 데이터는 이렇게 가져오세요
+data_path = os.path.join(base_dir, 'data', 'stock_data.csv')
 # =========================================================
 # 프로젝트 공통 설정
 # =========================================================
@@ -238,7 +247,7 @@ def main() -> None:
             "모델링/검증",
         ],
         key="dashboard_tabs",
-        on_change="rerun",
+        
     )
 
     # 현재 열린 탭에 맞춰 사이드바를 한 번만 렌더링한다.
