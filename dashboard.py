@@ -1,17 +1,25 @@
-import streamlit as st
-
 from log.introduction import render_introduction
 from log.process_flow import render_process_flow
 from tabs import data_preprocessing, modeling_validation, sentiment_proxy
+
+import os
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 import streamlit as st
 
-# 폰트 설정
-font_path = 'fonts/NanumGothic.ttf'  # 위에서 만든 폴더의 폰트 경로
-font_name = fm.FontProperties(fname=font_path).get_name()
-plt.rc('font', family=font_name)
+def set_font():
+    # 1. 폰트 패밀리 설정
+    plt.rcParams['font.family'] = 'sans-serif'
+    
+    # 2. 우선순위 설정: 나눔고딕 -> 기본 sans-serif
+    # 리눅스 서버(Streamlit Cloud)에 미리 설치된 폰트들을 활용합니다.
+    plt.rcParams['font.sans-serif'] = ['NanumGothic', 'DejaVu Sans', 'sans-serif']
+    
+    # 3. 마이너스 기호 깨짐 방지
+    plt.rcParams['axes.unicode_minus'] = False
 
+# 대시보드 실행 시 가장 먼저 호출하세요
+set_font()  
 # =========================================================
 # 프로젝트 공통 설정
 # =========================================================
