@@ -228,6 +228,34 @@ def render_experiment_summary() -> None:
         """
     )
 
+    st.subheader("최종 실험 구성")
+
+    st.markdown(
+        """
+        **실험 1 · 심리 proxy 구성 비교**  
+        삼성전자·KOSPI·Bitcoin의 현재 주봉 종가 3개와
+        각 자산의 과거 1~5주 로그수익률 15개를 합친
+        공통 가격 feature 18개를 사용합니다.
+
+        - Price-only: 공통 가격 feature만 사용
+        - Model B: PC1 추가
+        - Model C: residual 3개 추가
+        - Model D: PC1과 residual 3개 추가
+
+        **실험 2 · 개별 residual 기여도 검증**  
+        실험 1과 동일한 공통 가격 feature 18개에
+        residual을 하나씩만 추가합니다.
+
+        - Model A-1: ATR residual
+        - Model A-2: MFI residual
+        - Model A-3: Stochastic residual
+
+        **실험 3 · Bitcoin 보조 입력 효과 검증**  
+        삼성전자·KOSPI만 사용한 12개 가격 입력 기준선과
+        Bitcoin까지 포함한 18개 가격 입력 Price-only를 비교합니다.
+        """
+    )
+
     st.caption(
         "Model A-1~A-3은 개별 심리 proxy의 단독 효과를 확인하기 위한 "
         "추가 진단실험입니다. 모든 모델은 삼성전자 다음 주 로그수익률의 "

@@ -18,22 +18,70 @@ import joblib
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 MODEL_DISPLAY_NAME_MAP = {
+    # -----------------------------------------------------
+    # 단순 기준선
+    # -----------------------------------------------------
     "Zero-return Baseline": "Zero-return Baseline",
     "Train-mean Baseline": "Train-mean Baseline",
+
+    # -----------------------------------------------------
+    # 가격 기준모델
+    # -----------------------------------------------------
+    "Price-only Baseline (No Bitcoin)": (
+        "KOSPI-only Baseline"
+    ),
     "Price-only Baseline": "Price-only",
-    "Model B-ATR (ATR 단일 심리지표)": "Model A-1 (ATR)",
-    "Model B-MFI (MFI 단일 심리지표)": "Model A-2 (MFI)",
+
+    # -----------------------------------------------------
+    # 최신 CSV 모델명
+    # -----------------------------------------------------
+    "Model A-1 (ATR 단일 심리 proxy)": (
+        "Model A-1 (ATR)"
+    ),
+    "Model A-2 (MFI 단일 심리 proxy)": (
+        "Model A-2 (MFI)"
+    ),
+    "Model A-3 (Stochastic 단일 심리 proxy)": (
+        "Model A-3 (Stochastic)"
+    ),
+    "Model B (PC1 통합 심리 proxy)": (
+        "Model B (PC1)"
+    ),
+    "Model C (잔차 3개 심리 proxy)": (
+        "Model C (잔차 3개)"
+    ),
+    "Model D (PC1 + 잔차 3개 심리 proxy)": (
+        "Model D (PC1 + 잔차 3개)"
+    ),
+
+    # -----------------------------------------------------
+    # 이전 CSV 모델명 호환
+    # -----------------------------------------------------
+    "Model B-ATR (ATR 단일 심리지표)": (
+        "Model A-1 (ATR)"
+    ),
+    "Model B-MFI (MFI 단일 심리지표)": (
+        "Model A-2 (MFI)"
+    ),
     "Model B-Stochastic (Stochastic 단일 심리지표)": (
         "Model A-3 (Stochastic)"
     ),
-    "Model A (PCA 통합)": "Model B (PC1)",
-    "Model B (세부 잔차)": "Model C (잔차 3개)",
-    "Model C (전체 혼용)": "Model D (PC1 + 잔차 3개)",
+    "Model A (PCA 통합)": (
+        "Model B (PC1)"
+    ),
+    "Model B (세부 잔차)": (
+        "Model C (잔차 3개)"
+    ),
+    "Model C (전체 혼용)": (
+        "Model D (PC1 + 잔차 3개)"
+    ),
 }
+
 
 MODEL_DISPLAY_ORDER = [
     "Zero-return Baseline",
     "Train-mean Baseline",
+    "KOSPI-only Baseline",
     "Price-only",
     "Model A-1 (ATR)",
     "Model A-2 (MFI)",
@@ -860,199 +908,362 @@ def add_vertical_space(px: int = 48) -> None:
     )
 
 
-
 def run() -> None:
     st.header("모델 구축 및 검증")
 
     st.info(
         "최종 예측 대상은 삼성전자입니다. "
-        "삼성전자·KOSPI·Bitcoin의 현재 주봉 종가와 "
-        "각 자산의 과거 1~5주 로그수익률을 공통 가격 feature로 사용합니다. "
-        "KOSPI와 Bitcoin은 시장 흐름을 반영하는 외생 보조 입력자료입니다."
+        "실험 1과 실험 2에서는 삼성전자·KOSPI·Bitcoin의 "
+        "현재 주봉 종가 3개와 각 자산의 과거 1~5주 "
+        "로그수익률 15개를 합친 공통 가격 feature 18개를 사용합니다. "
+        "실험 3에서는 Bitcoin 관련 feature 6개를 제외하고 "
+        "삼성전자·KOSPI의 가격 feature 12개만 사용합니다."
     )
 
     st.caption(
-        "Price-only 기준모델, 개별 residual 단독 모델 A-1~A-3, "
-        "그리고 PC1·residual 구성에 따른 Model B/C/D를 비교합니다."
+        "실험 1은 Price-only와 Model B/C/D의 심리 proxy 구성 비교, "
+        "실험 2는 Model A-1~A-3의 개별 residual 기여도 비교, "
+        "실험 3은 KOSPI-only와 KOSPI+Bitcoin의 "
+        "외생 보조자료 범위 비교입니다."
     )
 
-    common_price_input = (
-        "삼성전자·KOSPI·Bitcoin 현재 주봉 종가\n"
-        "+ 각 자산의 과거 1~5주 로그수익률"
+    common_price_input_18 = (
+        "삼성전자·KOSPI·Bitcoin 현재 주봉 종가 3개\n"
+        "+ 각 자산의 과거 1~5주 로그수익률 15개"
+    )
+
+    kospi_only_input_12 = (
+        "삼성전자·KOSPI 현재 주봉 종가 2개\n"
+        "+ 두 자산의 과거 1~5주 로그수익률 10개"
     )
 
     comparison_df = pd.DataFrame(
         [
             {
+                "실험": "실험 3",
+                "모델": "KOSPI-only Baseline",
+                "공통 가격 입력": kospi_only_input_12,
+                "심리 proxy 구성": "사용하지 않음",
+                "추가 feature": "없음",
+                "총 feature 수": 12,
+                "비교 목적": (
+                    "Bitcoin을 제외한 외생 보조자료 기준선"
+                ),
+            },
+            {
+                "실험": "실험 1·3",
                 "모델": "Price-only",
-                "공통 가격 입력": common_price_input,
+                "공통 가격 입력": common_price_input_18,
                 "심리 proxy 구성": "사용하지 않음",
                 "추가 feature": "없음",
                 "총 feature 수": 18,
-                "비교 목적": "심리 proxy가 없는 가격 기준모델",
+                "비교 목적": (
+                    "심리 proxy가 없는 가격 기준모델이자 "
+                    "Bitcoin 추가 효과 비교 기준"
+                ),
             },
             {
+                "실험": "실험 2",
                 "모델": "Model A-1 (ATR)",
-                "공통 가격 입력": common_price_input,
+                "공통 가격 입력": common_price_input_18,
                 "심리 proxy 구성": "개별 residual 단독형",
                 "추가 feature": "ATR_10_res",
                 "총 feature 수": 19,
-                "비교 목적": "ATR residual의 단독 예측효과 확인",
+                "비교 목적": (
+                    "ATR residual의 단독 예측효과 확인"
+                ),
             },
             {
+                "실험": "실험 2",
                 "모델": "Model A-2 (MFI)",
-                "공통 가격 입력": common_price_input,
+                "공통 가격 입력": common_price_input_18,
                 "심리 proxy 구성": "개별 residual 단독형",
                 "추가 feature": "MFI_10_res",
                 "총 feature 수": 19,
-                "비교 목적": "MFI residual의 단독 예측효과 확인",
+                "비교 목적": (
+                    "MFI residual의 단독 예측효과 확인"
+                ),
             },
             {
+                "실험": "실험 2",
                 "모델": "Model A-3 (Stochastic)",
-                "공통 가격 입력": common_price_input,
+                "공통 가격 입력": common_price_input_18,
                 "심리 proxy 구성": "개별 residual 단독형",
                 "추가 feature": "STOCHk_10_3_3_res",
                 "총 feature 수": 19,
-                "비교 목적": "Stochastic residual의 단독 예측효과 확인",
+                "비교 목적": (
+                    "Stochastic residual의 단독 예측효과 확인"
+                ),
             },
             {
+                "실험": "실험 1",
                 "모델": "Model B (PC1)",
-                "공통 가격 입력": common_price_input,
+                "공통 가격 입력": common_price_input_18,
                 "심리 proxy 구성": "PC1 통합형",
                 "추가 feature": "Investor_Sentiment_PC1",
                 "총 feature 수": 19,
-                "비교 목적": "residual 3개의 공통 성분을 압축한 효과 확인",
+                "비교 목적": (
+                    "residual 3개의 공통 성분을 "
+                    "PC1으로 압축한 효과 확인"
+                ),
             },
             {
+                "실험": "실험 1",
                 "모델": "Model C (잔차 3개)",
-                "공통 가격 입력": common_price_input,
+                "공통 가격 입력": common_price_input_18,
                 "심리 proxy 구성": "Residual 개별형",
                 "추가 feature": (
-                    "ATR_10_res\nMFI_10_res\nSTOCHk_10_3_3_res"
+                    "ATR_10_res\n"
+                    "MFI_10_res\n"
+                    "STOCHk_10_3_3_res"
                 ),
                 "총 feature 수": 21,
-                "비교 목적": "개별 residual 정보를 모두 유지한 효과 확인",
+                "비교 목적": (
+                    "개별 residual 정보를 모두 유지한 효과 확인"
+                ),
             },
             {
+                "실험": "실험 1",
                 "모델": "Model D (PC1 + 잔차 3개)",
-                "공통 가격 입력": common_price_input,
+                "공통 가격 입력": common_price_input_18,
                 "심리 proxy 구성": "PC1 + Residual 결합형",
                 "추가 feature": (
                     "Investor_Sentiment_PC1\n"
-                    "+ ATR_10_res\n+ MFI_10_res\n+ STOCHk_10_3_3_res"
+                    "+ ATR_10_res\n"
+                    "+ MFI_10_res\n"
+                    "+ STOCHk_10_3_3_res"
                 ),
                 "총 feature 수": 22,
-                "비교 목적": "통합형과 개별형을 함께 사용한 효과 확인",
+                "비교 목적": (
+                    "통합형과 개별형을 함께 사용한 효과 확인"
+                ),
             },
         ]
     )
 
     render_presentation_table(
         comparison_df,
-        title="모델별 입력 구조",
+        title="최종 실험별 모델 입력 구조",
         footnote=(
-            "모든 모델은 현재 주봉 종가 3개와 과거 1~5주 로그수익률 "
+            "실험 1과 실험 2는 삼성전자·KOSPI·Bitcoin의 "
+            "현재 종가 3개와 각 자산의 과거 1~5주 로그수익률 "
             "15개를 합친 공통 가격 feature 18개를 사용합니다. "
-            "Model A-1~A-3은 개별 residual의 단독 효과를 확인하는 "
-            "추가 진단모델입니다."
+            "실험 3의 KOSPI-only Baseline은 Bitcoin_Close와 "
+            "Bitcoin_Log_Return_lag1~5를 제외한 총 12개를 사용합니다."
         ),
         left_align_cols=[
+            "실험",
             "모델",
             "공통 가격 입력",
             "심리 proxy 구성",
             "추가 feature",
             "비교 목적",
         ],
-        height=1000,
     )
 
+    # ---------------------------------------------------------
     # 동일 조건 백테스트 성능 비교
+    # ---------------------------------------------------------
     add_vertical_space(48)
+
     st.subheader("동일 조건 백테스트 성능 비교")
+
     st.caption(
-        "프로젝트 루트의 `model_backtest_summary.csv`를 사용합니다. "
-        "모든 결과는 동일한 58주 테스트 구간에서 계산됐습니다."
+        "프로젝트 루트의 최신 `model_backtest_summary.csv`를 사용합니다. "
+        "단순 기준선 2개, 가격 기준모델 2개, "
+        "심리 proxy 모델 A-1~D를 동일한 58주 테스트 구간에서 비교합니다."
     )
 
     if BACKTEST_SUMMARY_PATH.exists():
-        performance_df = pd.read_csv(BACKTEST_SUMMARY_PATH)
-        performance_df["Model"] = performance_df["Model"].replace(
-            MODEL_DISPLAY_NAME_MAP
+        performance_df = pd.read_csv(
+            BACKTEST_SUMMARY_PATH
         )
-        performance_df["Model_Order"] = pd.Categorical(
-            performance_df["Model"],
-            categories=MODEL_DISPLAY_ORDER,
-            ordered=True,
+
+        performance_df["Model"] = (
+            performance_df["Model"]
+            .replace(MODEL_DISPLAY_NAME_MAP)
         )
+
+        performance_df["Model_Order"] = (
+            pd.Categorical(
+                performance_df["Model"],
+                categories=MODEL_DISPLAY_ORDER,
+                ordered=True,
+            )
+        )
+
         performance_df = (
-            performance_df.sort_values("Model_Order")
+            performance_df
+            .sort_values("Model_Order")
             .drop(columns=["Model_Order"])
             .reset_index(drop=True)
         )
 
-        performance_display_df = _format_performance_table(performance_df)
+        performance_display_df = (
+            _format_performance_table(
+                performance_df
+            )
+        )
+
         render_presentation_table(
             performance_display_df,
-            title="기준선 및 Model A-1~D 성능 비교",
+            title="최종 기준선 및 Model A-1~D 성능 비교",
             footnote=(
-                "Zero-return·Train-mean은 단순 비교 기준선입니다. "
-                "Price-only와 Model A-1~D는 실제 실험모델입니다. "
+                "Zero-return·Train-mean은 단순 예측 기준선입니다. "
+                "KOSPI-only는 Bitcoin을 제외한 12개 가격 입력 기준선이며, "
+                "Price-only는 Bitcoin까지 포함한 18개 가격 입력 기준모델입니다. "
                 "DA는 다음 주 실제 방향과 예측 방향이 일치한 비율입니다."
             ),
             left_align_cols=["모델"],
-            height=920,
         )
 
-        left, center, right = st.columns([0.08, 0.84, 0.08])
+        left, center, right = st.columns(
+            [0.08, 0.84, 0.08]
+        )
+
         with center:
             st.pyplot(
-                plot_directional_accuracy_bar(performance_df),
+                plot_directional_accuracy_bar(
+                    performance_df
+                ),
                 use_container_width=True,
             )
 
         st.info(
-            "Model A-1(ATR)과 Model A-2(MFI)는 각각 36/58로 "
-            "DA 62.0690%를 기록했습니다. Price-only와 Model A-3·B·C·D는 "
-            "각각 35/58로 DA 60.3448%였습니다. 한 건 차이는 약 1.7241%p입니다."
+            "최신 CSV 기준으로 Model A-1(ATR)과 "
+            "Model A-2(MFI)는 각각 36/58, "
+            "DA 62.0690%로 가장 높았습니다. "
+            "Price-only와 Model A-3·B·C·D는 "
+            "각각 35/58, DA 60.3448%였습니다. "
+            "KOSPI-only Baseline은 33/58, "
+            "DA 56.8966%로 나타났습니다."
         )
-    else:
-        st.error(f"성능 CSV를 찾지 못했습니다: {BACKTEST_SUMMARY_PATH}")
 
+        st.warning(
+            "Train-mean Baseline은 모든 테스트 구간을 상승으로 예측하여 "
+            "DA 67.2414%를 기록했습니다. "
+            "이는 테스트 구간에서 상승 주차가 많았던 클래스 불균형의 영향을 "
+            "받은 결과이므로, 실제 실험모델의 대표 비교 기준은 "
+            "Price-only로 해석합니다."
+        )
+
+        experiment3_df = performance_df[
+            performance_df["Model"].isin(
+                [
+                    "KOSPI-only Baseline",
+                    "Price-only",
+                ]
+            )
+        ].copy()
+
+        if len(experiment3_df) == 2:
+            experiment3_display_df = (
+                _format_performance_table(
+                    experiment3_df
+                )
+            )
+
+            render_presentation_table(
+                experiment3_display_df,
+                title=(
+                    "실험 3 · Bitcoin 외생 보조자료 추가 효과"
+                ),
+                footnote=(
+                    "KOSPI-only Baseline은 삼성전자와 KOSPI의 "
+                    "가격 feature 12개만 사용합니다. "
+                    "Price-only는 Bitcoin의 현재 종가와 "
+                    "과거 1~5주 로그수익률 6개를 추가하여 "
+                    "총 18개를 사용합니다. "
+                    "본 테스트 구간에서 Bitcoin을 포함한 Price-only는 "
+                    "2건 더 적중했고 DA가 약 3.4483%p 높았습니다."
+                ),
+                left_align_cols=["모델"],
+            )
+
+    else:
+        st.error(
+            f"성능 CSV를 찾지 못했습니다: "
+            f"{BACKTEST_SUMMARY_PATH}"
+        )
+
+    # ---------------------------------------------------------
     # 기간별 백테스트
+    # ---------------------------------------------------------
     if PERIOD_BACKTEST_PATH.exists():
-        with st.expander("기간별 방향 정확도 보기", expanded=False):
-            period_df = pd.read_csv(PERIOD_BACKTEST_PATH)
-            period_df["Model"] = period_df["Model"].replace(
-                MODEL_DISPLAY_NAME_MAP
+        with st.expander(
+            "기간별 방향 정확도 보기",
+            expanded=False,
+        ):
+            period_df = pd.read_csv(
+                PERIOD_BACKTEST_PATH
             )
-            period_df["Model_Order"] = pd.Categorical(
-                period_df["Model"],
-                categories=MODEL_DISPLAY_ORDER,
-                ordered=True,
+
+            period_df["Model"] = (
+                period_df["Model"]
+                .replace(MODEL_DISPLAY_NAME_MAP)
             )
+
+            period_df["Model_Order"] = (
+                pd.Categorical(
+                    period_df["Model"],
+                    categories=MODEL_DISPLAY_ORDER,
+                    ordered=True,
+                )
+            )
+
             period_df = (
-                period_df.sort_values(["Period", "Model_Order"])
+                period_df
+                .sort_values(
+                    [
+                        "Period",
+                        "Model_Order",
+                    ]
+                )
                 .drop(columns=["Model_Order"])
                 .reset_index(drop=True)
             )
+
             period_display_df = period_df.copy()
-            for col in ["DA", "Up_DA", "Down_DA", "Pred_Up_Ratio"]:
+
+            for col in [
+                "DA",
+                "Up_DA",
+                "Down_DA",
+                "Pred_Up_Ratio",
+            ]:
                 if col in period_display_df.columns:
-                    period_display_df[col] = pd.to_numeric(
-                        period_display_df[col], errors="coerce"
-                    ).map(
-                        lambda value: "-" if pd.isna(value) else f"{value:.4f}%"
+                    period_display_df[col] = (
+                        pd.to_numeric(
+                            period_display_df[col],
+                            errors="coerce",
+                        )
+                        .map(
+                            lambda value: (
+                                "-"
+                                if pd.isna(value)
+                                else f"{value:.4f}%"
+                            )
+                        )
                     )
+
             render_presentation_table(
                 period_display_df,
                 title="기간별 모델 방향 정확도",
                 footnote=(
-                    "전체 DA가 같더라도 기간별 적중 양상과 상승·하락 예측 성향은 "
-                    "다를 수 있습니다."
+                    "최신 CSV의 5개 기간별 결과입니다. "
+                    "KOSPI-only와 Price-only의 차이를 통해 "
+                    "Bitcoin 추가 효과를 확인하고, "
+                    "Model A-1~A-3과 Model B/C/D를 통해 "
+                    "심리 proxy 구성별 기간 차이를 확인합니다. "
+                    "전체 DA가 같더라도 기간별 적중 양상과 "
+                    "상승·하락 예측 성향은 다를 수 있습니다."
                 ),
-                left_align_cols=["Period", "Model"],
-                height=1200,
+                left_align_cols=[
+                    "Period",
+                    "Model",
+                ],
             )
+
 
     # 과거 테스트 구간 실제값·예측값 연결
     if PREDICTION_PATH.exists():
@@ -1112,7 +1323,7 @@ def run() -> None:
                         ),
                     }
                 },
-                height=900,
+             
             )
 
             with st.expander(
@@ -1194,7 +1405,7 @@ def run() -> None:
             "gain 기반 중요도를 그룹별로 합산했습니다."
         ),
         left_align_cols=["입력 그룹"],
-        height=380,
+      
     )
 
     with st.expander("개별 feature 중요도 상세 보기", expanded=False):
@@ -1206,7 +1417,7 @@ def run() -> None:
                 "사용되지 않은 변수입니다."
             ),
             left_align_cols=["Feature", "입력 구분", "모델 사용 여부"],
-            height=1180,
+         
         )
 
     st.caption(
@@ -1246,8 +1457,13 @@ def run() -> None:
     col1, col2, col3 = st.columns(3)
     col1.metric("사용 모델", f"Model {selected_model}")
     col2.metric(
-        "저장 모델 공식 DA",
+        "pkl 저장 당시 백테스트 DA",
         f"{BACKTEST_DA[selected_model]:.2f}%",
+    )
+    st.caption(
+        "이 값은 현재 화면의 최신 동일 조건 CSV 결과가 아니라, "
+        "해당 pkl 모델을 저장할 당시 기록된 백테스트 DA입니다. "
+        "최신 공식 비교 결과는 위의 동일 조건 백테스트 표를 기준으로 확인합니다."
     )
     col3.metric(
         "다음 주 예측 방향",
@@ -1281,7 +1497,7 @@ def run() -> None:
             "저장된 pkl 모델의 feature 구성에 맞춘 최근 주봉 기준 입력값입니다."
         ),
         left_align_cols=["입력 feature"],
-        height=980,
+    
     )
 
     sentiment_compare_df = (
@@ -1327,7 +1543,7 @@ def run() -> None:
             "구분해 표시합니다."
         ),
         left_align_cols=["구분", "의미"],
-        height=420,
+       
     )
 
     pred_log_return = result["pred_log_return"]
@@ -1367,7 +1583,7 @@ def run() -> None:
             "저장된 pkl 모델이 산출한 최근 1회 예측을 요약합니다."
         ),
         left_align_cols=["항목", "해석"],
-        height=520,
+        
     )
 
     forecast_fig = _plot_next_week_log_return_forecast(

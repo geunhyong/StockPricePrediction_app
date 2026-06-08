@@ -298,17 +298,23 @@ def _build_pca_reference_table() -> pd.DataFrame:
 # Streamlit 화면
 # =========================================================
 def run() -> None:
-    st.header("심리지표 계산 및 처리")
-
-    # 이 탭은 삼성전자 최종 산출물만 사용한다.
+    """
+    심리지표 탭의 메인 함수.
+    
+    주의: 사이드바는 dashboard.py의 render_sentiment_sidebar()에서 이미 렌더링됨.
+    여기서는 세션 상태만 고정하고, 탭 내용만 표시합니다.
+    """
     st.session_state.asset_name = "삼성전자"
-
+    
+    # ❌ 제거: st.sidebar.xxx() 코드 전부
+    
     st.info(
         "본 탭은 삼성전자 ATR·MFI·Stochastic에서 "
         "수익률·모멘텀·변동성으로 설명되는 부분을 통제한 residual과, "
-        "residual 3개를 통합한 Investor_Sentiment_PC1을 확인합니다. "
-        "화면의 최종값은 프로젝트 루트의 보성님 산출 CSV를 기준으로 표시합니다."
+        "Investor Sentiment(PC1)을 확인합니다."
     )
+    
+    st.subheader("심리지표 시각화")
 
     missing_files = _validate_required_files()
 
