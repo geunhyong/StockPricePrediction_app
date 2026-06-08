@@ -83,8 +83,7 @@ def initialize_session_state() -> None:
 # =========================================================
 def render_default_sidebar() -> None:
     """
-    프로젝트 소개 및 데이터 전처리 탭에서 사용하는
-    자산 선택 사이드바입니다.
+     데이터 전처리 탭에서만 사용하는 자산 선택 사이드바입니다.
     """
     st.sidebar.header("주봉 데이터 준비")
 
@@ -101,6 +100,27 @@ def render_default_sidebar() -> None:
         "기술지표 계산 결과를 확인합니다."
     )
 
+def render_overview_sidebar() -> None:
+    """
+    프로젝트 소개 탭에서 사용하는 고정 안내 사이드바입니다.
+
+    자산 선택 기능은 제공하지 않고,
+    프로젝트의 최종 예측 대상과 외생 보조 입력만 안내합니다.
+    """
+    st.session_state.asset_name = PREDICTION_TARGET
+
+    st.sidebar.header("프로젝트 안내")
+
+    st.sidebar.markdown("**최종 예측 대상**")
+    st.sidebar.markdown("### 삼성전자")
+
+    st.sidebar.markdown("**외생 보조 입력**")
+    st.sidebar.write("KOSPI · Bitcoin")
+
+    st.sidebar.caption(
+        "프로젝트 소개 탭에서는 연구 목적과 "
+        "실험 1·2·3의 전체 구조를 설명합니다."
+    )
 
 def render_sentiment_sidebar() -> None:
     """
@@ -163,104 +183,53 @@ def render_dashboard_header() -> None:
 # =========================================================
 # 프로젝트 소개 탭의 실험 구성
 # =========================================================
+
 def render_experiment_summary() -> None:
     """
-    프로젝트 소개 탭에서 전체 실험 구조를 요약한다.
-
-    자세한 성능 결과와 해석은 모델링/검증 탭에서 표시한다.
+    프로젝트 소개 탭에서 최종 실험 구조를 요약한다.
     """
-    st.subheader("분석 도구 및 실험 구성")
-
-    st.markdown(
-        """
-        **공통 가격 feature 18개**  
-        삼성전자·KOSPI·Bitcoin의 현재 주봉 종가 3개와  
-        각 자산의 과거 1~5주 로그수익률 15개
-        """
-    )
-
-    st.markdown(
-        """
-        **Price-only**  
-        공통 가격 feature만 사용하는 기준모델
-        """
-    )
-
-    st.markdown(
-        """
-        **Model A-1 · ATR 단독형**  
-        공통 가격 feature에 ATR residual만 추가
-        """
-    )
-
-    st.markdown(
-        """
-        **Model A-2 · MFI 단독형**  
-        공통 가격 feature에 MFI residual만 추가
-        """
-    )
-
-    st.markdown(
-        """
-        **Model A-3 · Stochastic 단독형**  
-        공통 가격 feature에 Stochastic residual만 추가
-        """
-    )
-
-    st.markdown(
-        """
-        **Model B · PC1 통합형**  
-        공통 가격 feature에 residual 3개의 공통 성분인 PC1을 추가
-        """
-    )
-
-    st.markdown(
-        """
-        **Model C · Residual 개별형**  
-        공통 가격 feature에 ATR·MFI·Stochastic residual 3개를 추가
-        """
-    )
-
-    st.markdown(
-        """
-        **Model D · 결합형**  
-        공통 가격 feature에 PC1과 residual 3개를 함께 추가
-        """
-    )
-
     st.subheader("최종 실험 구성")
 
     st.markdown(
         """
-        **실험 1 · 심리 proxy 구성 비교**  
-        삼성전자·KOSPI·Bitcoin의 현재 주봉 종가 3개와
-        각 자산의 과거 1~5주 로그수익률 15개를 합친
-        공통 가격 feature 18개를 사용합니다.
+### 실험 1 · 심리 proxy 구성 비교
 
-        - Price-only: 공통 가격 feature만 사용
-        - Model B: PC1 추가
-        - Model C: residual 3개 추가
-        - Model D: PC1과 residual 3개 추가
+삼성전자·KOSPI·Bitcoin의 현재 주봉 종가 3개와  
+각 자산의 과거 1~5주 로그수익률 15개를 합친  
+공통 가격 feature 18개를 사용합니다.
 
-        **실험 2 · 개별 residual 기여도 검증**  
-        실험 1과 동일한 공통 가격 feature 18개에
-        residual을 하나씩만 추가합니다.
+- **Price-only**: 공통 가격 feature 18개
+- **Model B**: 공통 가격 feature + PC1
+- **Model C**: 공통 가격 feature + residual 3개
+- **Model D**: 공통 가격 feature + PC1 + residual 3개
 
-        - Model A-1: ATR residual
-        - Model A-2: MFI residual
-        - Model A-3: Stochastic residual
+### 실험 2 · 개별 residual 기여도 검증
 
-        **실험 3 · Bitcoin 보조 입력 효과 검증**  
-        삼성전자·KOSPI만 사용한 12개 가격 입력 기준선과
-        Bitcoin까지 포함한 18개 가격 입력 Price-only를 비교합니다.
+실험 1과 동일한 공통 가격 feature 18개에  
+residual을 하나씩만 추가합니다.
+
+- **Model A-1**: ATR residual 추가
+- **Model A-2**: MFI residual 추가
+- **Model A-3**: Stochastic residual 추가
+
+### 실험 3 · Bitcoin 보조 입력 효과 검증
+
+- **KOSPI-only Baseline**: 삼성전자·KOSPI의 현재 종가 2개와  
+  두 자산의 과거 1~5주 로그수익률 10개, 총 12개
+- **Price-only**: 삼성전자·KOSPI·Bitcoin의 현재 종가 3개와  
+  세 자산의 과거 1~5주 로그수익률 15개, 총 18개
+
+Bitcoin 관련 feature 6개를 추가했을 때  
+삼성전자 다음 주 방향 예측 성능이 달라지는지 확인합니다.
         """
     )
 
     st.caption(
-        "Model A-1~A-3은 개별 심리 proxy의 단독 효과를 확인하기 위한 "
-        "추가 진단실험입니다. 모든 모델은 삼성전자 다음 주 로그수익률의 "
-        "상승·하락 방향을 예측하며 Directional Accuracy를 중심으로 비교합니다."
+        "모든 실험은 삼성전자 다음 주 로그수익률 방향을 예측하며, "
+        "동일한 58주 테스트 구간에서 Directional Accuracy를 중심으로 비교합니다."
     )
+
+
 
 
 # =========================================================
@@ -278,16 +247,21 @@ def main() -> None:
             "모델링/검증",
         ],
         key="dashboard_tabs",
-        
+        on_change="rerun",
     )
 
-    # 현재 열린 탭에 맞춰 사이드바를 한 번만 렌더링한다.
+    
     if modeling_tab.open:
         render_modeling_sidebar()
+
     elif sentiment_tab.open:
         render_sentiment_sidebar()
-    else:
+
+    elif data_tab.open:
         render_default_sidebar()
+
+    else:
+        render_overview_sidebar()
 
     # -----------------------------------------------------
     # 프로젝트 소개
