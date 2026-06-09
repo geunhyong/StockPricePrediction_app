@@ -888,7 +888,7 @@ def _build_live_official_sentiment_table(
                 "실시간 기준일": pd.Timestamp(
                     live_info["date"]
                 ).strftime("%Y-%m-%d"),
-                "보성님 CSV 값": f"{official_values[feature_name]:.6f}",
+                "CSV 값": f"{official_values[feature_name]:.6f}",
                 "CSV 기준일": pd.Timestamp(
                     official_info["date"]
                 ).strftime("%Y-%m-%d"),
@@ -1508,12 +1508,12 @@ def run() -> None:
 
     if sentiment_compare_df is not None:
         st.subheader(
-            "실시간 계산값과 보성님 CSV 값 함께 보기"
+            "실시간 계산값과 CSV 값 함께 보기"
         )
 
         st.caption(
             "왼쪽은 현재 대시보드가 최근 데이터를 이용해 다시 계산한 값이고, "
-            "오른쪽은 보성님이 전달한 삼성전자_sentiment_features.csv의 "
+            "오른쪽은 삼성전자_sentiment_features.csv의 "
             "최종값입니다. 두 값을 서로 대체하지 않고 기준일과 함께 표시합니다."
         )
 
@@ -1523,13 +1523,12 @@ def run() -> None:
             footnote=(
                 "값이 다르면 데이터 수집 시점, 기술지표 계산 구간, "
                 "잔차 회귀 범위 또는 PCA 기준의 차이일 수 있습니다. "
-                "이 표를 그대로 보성님께 확인 자료로 사용할 수 있습니다."
             ),
             left_align_cols=["항목"],
         )
     else:
         st.info(
-            "실시간 계산값 또는 보성님 CSV 값을 불러오지 못해 "
+            "실시간 계산값 또는 CSV 값을 불러오지 못해 "
             "두 값을 함께 표시하지 못했습니다."
         )
 
