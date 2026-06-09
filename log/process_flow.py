@@ -16,6 +16,14 @@ PROXY_IMAGE = DATAFLOW_IMAGE_DIR / "04_proxy_generation.png"
 XGBOOST_IMAGE = DATAFLOW_IMAGE_DIR / "05_xgboost_regression.png"
 SIGN_IMAGE = DATAFLOW_IMAGE_DIR / "06_sign_comparison.png"
 DIRECTION_IMAGE = DATAFLOW_IMAGE_DIR / "07_direction_accuracy.png"
+# =========================================================
+# 프로젝트 및 DataFlow 경로
+# =========================================================
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+DATAFLOW_ROOT = PROJECT_ROOT / "quantmodel01_dataflow"
+IMAGE_DIR = DATAFLOW_ROOT / "images"
+DOCUMENT_DIR = DATAFLOW_ROOT / "documents"
 
 # =========================================================
 # DataFlow 이미지
