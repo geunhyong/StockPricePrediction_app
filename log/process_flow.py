@@ -161,7 +161,7 @@ DOCUMENT_LIST = (
 DOCUMENTS = [
     {
         "label": "최종 연구 기획서 다운로드",
-        "path": DOCUMENT_DIR / "투자자심리지수_주가예측_최종기획서_v2.docx",
+        "path": PLAN_DOCUMENT,
         "mime": (
             "application/vnd.openxmlformats-officedocument."
             "wordprocessingml.document"
@@ -169,7 +169,7 @@ DOCUMENTS = [
     },
     {
         "label": "DataFlow 최종 설명문 다운로드",
-        "path": DOCUMENT_DIR / "DataFlow_탭_최종설명문_v2.docx",
+        "path": DATAFLOW_DOCUMENT,
         "mime": (
             "application/vnd.openxmlformats-officedocument."
             "wordprocessingml.document"
@@ -177,12 +177,12 @@ DOCUMENTS = [
     },
     {
         "label": "DataFlow Mermaid 원문 다운로드",
-        "path": DOCUMENT_DIR / "DataFlow_Mermaid_최종본.md",
+        "path": MERMAID_DOCUMENT,
         "mime": "text/markdown",
     },
     {
         "label": "문서 정리 목록 다운로드",
-        "path": DOCUMENT_DIR / "문서_정리_목록.md",
+        "path": DOCUMENT_LIST,
         "mime": "text/markdown",
     },
 ]
