@@ -1,5 +1,8 @@
 from pathlib import Path
+
 import streamlit as st
+
+
 # =========================================================
 # 프로젝트 및 DataFlow 경로
 # =========================================================
@@ -9,24 +12,9 @@ DATAFLOW_DIR = PROJECT_ROOT / "quantmodel01_dataflow"
 DATAFLOW_IMAGE_DIR = DATAFLOW_DIR / "images"
 DATAFLOW_DOCUMENT_DIR = DATAFLOW_DIR / "documents"
 
-TITLE_IMAGE = DATAFLOW_IMAGE_DIR / "01_title.png"
-FRAMEWORK_IMAGE = DATAFLOW_IMAGE_DIR / "02_framework.png"
-DATA_COLLECTION_IMAGE = DATAFLOW_IMAGE_DIR / "03_data_collection.png"
-PROXY_IMAGE = DATAFLOW_IMAGE_DIR / "04_proxy_generation.png"
-XGBOOST_IMAGE = DATAFLOW_IMAGE_DIR / "05_xgboost_regression.png"
-SIGN_IMAGE = DATAFLOW_IMAGE_DIR / "06_sign_comparison.png"
-DIRECTION_IMAGE = DATAFLOW_IMAGE_DIR / "07_direction_accuracy.png"
-# =========================================================
-# 프로젝트 및 DataFlow 경로
-# =========================================================
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-
-DATAFLOW_ROOT = PROJECT_ROOT / "quantmodel01_dataflow"
-IMAGE_DIR = DATAFLOW_ROOT / "images"
-DOCUMENT_DIR = DATAFLOW_ROOT / "documents"
 
 # =========================================================
-# DataFlow 이미지
+# DataFlow 이미지 경로
 # =========================================================
 TITLE_IMAGE = (
     DATAFLOW_IMAGE_DIR
@@ -65,7 +53,7 @@ DIRECTION_IMAGE = (
 
 
 # =========================================================
-# DataFlow 문서
+# DataFlow 문서 경로
 # =========================================================
 PLAN_DOCUMENT = (
     DATAFLOW_DOCUMENT_DIR
@@ -90,93 +78,53 @@ DOCUMENT_LIST = (
 
 # =========================================================
 # 화면에 표시할 이미지 순서
-# 실제 파일명이 다르면 path 값만 수정한다.
 # =========================================================
-# IMAGE_SECTIONS = [
-#     {
-#         "title": "1. 연구 아키텍처 개요",
-#         "path": IMAGE_DIR / "01_title.png",
-#         "caption": (
-#             "가격 관련 요인을 통제한 residual과 PCA 기반 심리 proxy를 "
-#             "이용하여 삼성전자 다음 주 로그수익률을 예측하는 전체 연구 구조입니다."
-#         ),
-#     },
-#     {
-#         "title": "2. 연구 프레임워크",
-#         "path": IMAGE_DIR / "02_framework.png",
-#         "caption": (
-#             "삼성전자·KOSPI·Bitcoin 주봉 자료를 수집하고, "
-#             "삼성전자 심리 proxy를 생성한 뒤 XGBoost 회귀모델로 "
-#             "다음 주 로그수익률을 예측합니다."
-#         ),
-#     },
-#     {
-#         "title": "3. 데이터 수집 및 정합성 확보",
-#         "path": IMAGE_DIR / "03_data_collection.png",
-#         "caption": (
-#             "세 자산의 주봉 OHLCV를 수집하고 날짜 정렬, 결측치 확인, "
-#             "워밍업 구간 확보와 캐시 저장을 수행합니다."
-#         ),
-#     },
-#     {
-#         "title": "4. 심리 proxy 생성",
-#         "path": IMAGE_DIR / "04_proxy_generation.png",
-#         "caption": (
-#             "삼성전자 ATR·MFI·Stochastic에서 RET·MOM·VOL로 설명되는 "
-#             "부분을 통제하여 residual 3개를 만들고, 표준화와 PCA를 통해 "
-#             "Investor_Sentiment_PC1을 생성합니다."
-#         ),
-#     },
-#     {
-#         "title": "5. XGBoost 로그수익률 회귀 학습",
-#         "path": IMAGE_DIR / "05_xgboost_regression.png",
-#         "caption": (
-#             "모델은 상승·하락 확률을 직접 출력하는 분류모델이 아니라, "
-#             "삼성전자 다음 주 연속형 로그수익률을 예측하는 XGBoost 회귀모델입니다."
-#         ),
-#     },
-#     {
-#         "title": "6. 분류가 아닌 회귀 설계를 사용한 이유",
-#         "path": IMAGE_DIR / "06_regression_method.png",
-#         "caption": (
-#             "연속형 로그수익률을 예측하여 R²·RMSE·MAE를 평가하고, "
-#             "예측값과 실제값의 부호가 일치하는지를 이용해 "
-#             "Directional Accuracy를 추가로 계산합니다."
-#         ),
-#     },
-#     {
-#         "title": "7. 부호 기반 방향성 평가",
-#         "path": IMAGE_DIR / "07_direction_evaluation.png",
-#         "caption": (
-#             "예측 로그수익률과 실제 로그수익률의 부호가 같으면 적중, "
-#             "다르면 실패로 판정합니다. 이는 확률값이 아니라 "
-#             "회귀 예측값의 부호를 이용한 사후 방향 평가입니다."
-#         ),
-#     },
-#     {
-#         "title": "8. 시스템 계층과 처리 역할",
-#         "path": IMAGE_DIR / "08_system_layers.png",
-#         "caption": (
-#             "데이터 수집, 저장, 처리·분석, Streamlit 표출 계층을 구분하여 "
-#             "공식 백테스트와 최신 데이터 기반 추론의 역할을 설명합니다."
-#         ),
-#     },
-#     {
-#         "title": "9. 실험 결과와 해석",
-#         "path": IMAGE_DIR / "09_result_summary.png",
-#         "caption": (
-#             "통합 심리 proxy는 Price-only 대비 추가 적중을 만들지 못했고, "
-#             "ATR·MFI residual 단독형에서만 58주 중 1건의 제한적인 개선이 "
-#             "관찰됐습니다."
-#         ),
-#     },
-# ]
+DATAFLOW_SLIDES = [
+    {
+        "number": "01",
+        "title": "모델 DataFlow 소개",
+        "path": TITLE_IMAGE,
+    },
+    {
+        "number": "02",
+        "title": "가설 검증 중심의 연구 방법론",
+        "path": FRAMEWORK_IMAGE,
+    },
+    {
+        "number": "03",
+        "title": "신뢰성 있는 원천 데이터 확보",
+        "path": DATA_COLLECTION_IMAGE,
+    },
+    {
+        "number": "04",
+        "title": "Residual 추출 및 심리 proxy 생성",
+        "path": PROXY_IMAGE,
+    },
+    {
+        "number": "05",
+        "title": "XGBoost 회귀모델 학습",
+        "path": XGBOOST_IMAGE,
+    },
+    {
+        "number": "06",
+        "title": "예측값 부호 기반 방향 판정",
+        "path": SIGN_IMAGE,
+    },
+    {
+        "number": "07",
+        "title": "공식 방향 정확도 비교",
+        "path": DIRECTION_IMAGE,
+    },
+]
 
 
+# =========================================================
+# 다운로드 문서
+# =========================================================
 DOCUMENTS = [
     {
         "label": "최종 연구 기획서 다운로드",
-        "path": DOCUMENT_DIR / "투자자심리지수_주가예측_최종기획서_v2.docx",
+        "path": PLAN_DOCUMENT,
         "mime": (
             "application/vnd.openxmlformats-officedocument."
             "wordprocessingml.document"
@@ -184,7 +132,7 @@ DOCUMENTS = [
     },
     {
         "label": "DataFlow 최종 설명문 다운로드",
-        "path": DOCUMENT_DIR / "DataFlow_탭_최종설명문_v2.docx",
+        "path": DATAFLOW_DOCUMENT,
         "mime": (
             "application/vnd.openxmlformats-officedocument."
             "wordprocessingml.document"
@@ -192,19 +140,21 @@ DOCUMENTS = [
     },
     {
         "label": "DataFlow Mermaid 원문 다운로드",
-        "path": DOCUMENT_DIR / "DataFlow_Mermaid_최종본.md",
+        "path": MERMAID_DOCUMENT,
         "mime": "text/markdown",
     },
     {
         "label": "문서 정리 목록 다운로드",
-        "path": DOCUMENT_DIR / "문서_정리_목록.md",
+        "path": DOCUMENT_LIST,
         "mime": "text/markdown",
     },
 ]
 
 
 def _render_pipeline_summary() -> None:
-    """DataFlow의 핵심 구조를 요약한다."""
+    """
+    DataFlow의 핵심 구조를 요약한다.
+    """
     col1, col2, col3, col4 = st.columns(4)
 
     col1.metric(
@@ -229,13 +179,15 @@ def _render_pipeline_summary() -> None:
 
 
 def _render_core_definition() -> None:
-    """연구와 자동화 범위를 설명한다."""
+    """
+    연구 목적과 자동화 범위를 설명한다.
+    """
     st.info(
         "본 연구는 삼성전자 다음 주 로그수익률을 연속형 값으로 예측하고, "
         "예측값과 실제값의 부호 일치 여부를 중심으로 방향 정확도를 평가합니다. "
         "투자심리와 주가의 인과관계를 증명하는 연구가 아니라, "
-        "동일한 가격정보에 심리 proxy를 추가했을 때 추가 예측정보가 "
-        "제공되는지를 검증하는 비교실험입니다."
+        "동일한 가격정보에 심리 proxy를 추가했을 때 "
+        "추가 예측정보가 제공되는지를 검증하는 비교실험입니다."
     )
 
     st.warning(
@@ -246,30 +198,61 @@ def _render_core_definition() -> None:
     )
 
 
-# def _render_image_section(
-#     title: str,
-#     image_path: Path,
-#     caption: str,
-# ) -> None:
-#     """개별 DataFlow 이미지를 설명과 함께 표시한다."""
-#     st.subheader(title)
+def _render_slide(
+    number: str,
+    title: str,
+    image_path: Path,
+) -> None:
+    """
+    DataFlow 소개 이미지를 순서대로 표시한다.
+    """
+    st.subheader(
+        f"{number} · {title}"
+    )
 
-#     if image_path.exists():
-#         st.image(
-#             str(image_path),
-#             use_container_width=True,
-#         )
+    if image_path.exists():
+        st.image(
+            str(image_path),
+            use_container_width=True,
+        )
+    else:
+        st.warning(
+            "이미지 파일을 찾지 못했습니다: "
+            f"{image_path.name}"
+        )
 
-#         st.caption(caption)
 
-#     else:
-#         st.warning(
-#             f"이미지 파일을 찾지 못했습니다: {image_path.name}"
-#         )
+def _render_dataflow_slides() -> None:
+    """
+    DataFlow 소개 이미지를 정해진 순서대로 렌더링한다.
+    """
+    st.divider()
+    st.subheader("모델 처리과정 소개")
+
+    st.caption(
+        "아래 이미지는 데이터 수집부터 심리 proxy 생성, "
+        "XGBoost 회귀 학습과 부호 기반 방향 평가까지의 "
+        "전체 모델 흐름을 간단히 소개합니다. "
+        "공식 실험 수치와 상세 결과는 모델링/검증 탭을 기준으로 확인합니다."
+    )
+
+    for slide in DATAFLOW_SLIDES:
+        _render_slide(
+            number=slide["number"],
+            title=slide["title"],
+            image_path=slide["path"],
+        )
+
+        st.markdown(
+            "<div style='height: 32px;'></div>",
+            unsafe_allow_html=True,
+        )
 
 
 def _render_dual_flow() -> None:
-    """공식 실험과 최신 예측 흐름을 분리해 설명한다."""
+    """
+    공식 실험과 최신 예측 흐름을 분리해 설명한다.
+    """
     st.divider()
     st.subheader("공식 실험과 최신 예측의 분리 구조")
 
@@ -293,7 +276,7 @@ def _render_dual_flow() -> None:
 동일한 58주와 5개 세부 기간 평가
 
 **5. 공식 산출물 저장**  
-성능 CSV, 기간별 CSV, 모델 pkl
+성능 CSV, 기간별 CSV, 저장 모델 pkl
 
 **6. Streamlit 표출**  
 확정 CSV를 정적으로 불러와 표시
@@ -321,13 +304,15 @@ Model B·C·D 중 선택
 저장 XGBoost 회귀모델 사용
 
 **6. 방향 판정**  
-예측값 부호로 상승·하락 표시
+예측값의 부호로 상승·하락 표시
             """
         )
 
 
 def _render_automation_scope() -> None:
-    """현재 파이프라인의 자동화 수준을 표시한다."""
+    """
+    현재 파이프라인의 자동화 수준을 표시한다.
+    """
     st.divider()
     st.subheader("현재 자동화 범위")
 
@@ -382,7 +367,9 @@ def _render_automation_scope() -> None:
 
 
 def _render_document_downloads() -> None:
-    """DataFlow 관련 문서를 다운로드할 수 있게 한다."""
+    """
+    DataFlow 관련 문서를 다운로드할 수 있게 한다.
+    """
     st.divider()
     st.subheader("연구 기획서 및 DataFlow 문서")
 
@@ -403,6 +390,12 @@ def _render_document_downloads() -> None:
     for index, document in enumerate(existing_documents):
         path = document["path"]
 
+        button_key = (
+            "dataflow_document_download_"
+            f"{index}_"
+            f"{path.stem}"
+        )
+
         with columns[index % 2]:
             st.download_button(
                 label=document["label"],
@@ -410,37 +403,25 @@ def _render_document_downloads() -> None:
                 file_name=path.name,
                 mime=document["mime"],
                 use_container_width=True,
-                key=f"dataflow_download_{index}",
+                key=button_key,
             )
 
 
 def render_process_flow() -> None:
-    """DataFlow 독립 탭 전체 화면을 렌더링한다."""
+    """
+    DataFlow 독립 탭 전체 화면을 렌더링한다.
+    """
     st.header("프로젝트 DataFlow")
 
     st.caption(
-        "조원들이 작성한 아키텍처 도식화 이미지와 최종 연구 문서를 "
-        "기준으로 데이터 수집부터 공식 백테스트 및 최신 예측까지의 "
+        "조원들이 작성한 모델 소개 이미지와 최종 연구 문서를 기준으로 "
+        "데이터 수집부터 공식 백테스트 및 최신 예측까지의 "
         "처리 구조를 설명합니다."
     )
 
     _render_pipeline_summary()
     _render_core_definition()
-
-    st.divider()
-
-    for section in IMAGE_SECTIONS:
-        _render_image_section(
-            title=section["title"],
-            image_path=section["path"],
-            caption=section["caption"],
-        )
-
-        st.markdown(
-            "<div style='height: 32px;'></div>",
-            unsafe_allow_html=True,
-        )
-
+    _render_dataflow_slides()
     _render_dual_flow()
     _render_automation_scope()
     _render_document_downloads()
@@ -449,7 +430,9 @@ def render_process_flow() -> None:
 def log_process_flow(
     path: str = "process_flow.md",
 ) -> None:
-    """DataFlow 설명을 Markdown 파일로 저장한다."""
+    """
+    DataFlow 설명을 Markdown 파일로 저장한다.
+    """
     content = (
         "# 프로젝트 DataFlow\n\n"
         "1. 삼성전자·KOSPI·Bitcoin 주봉 데이터 수집\n"
