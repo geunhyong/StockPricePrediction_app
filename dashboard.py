@@ -1,7 +1,7 @@
 from log.introduction import render_introduction
 from log.process_flow import render_process_flow
 from tabs import data_preprocessing, modeling_validation, sentiment_proxy
-
+from log.process_flow import render_process_flow
 import os
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
@@ -121,7 +121,37 @@ def render_overview_sidebar() -> None:
         "프로젝트 소개 탭에서는 연구 목적과 "
         "실험 1·2·3의 전체 구조를 설명합니다."
     )
+    
+def render_dataflow_sidebar() -> None:
+    """DataFlow 탭 전용 사이드바를 표시한다."""
+    st.session_state.asset_name = PREDICTION_TARGET
 
+    st.sidebar.header("DataFlow")
+
+    st.sidebar.metric(
+        "최종 예측 대상",
+        "삼성전자",
+    )
+
+    st.sidebar.markdown("**외생 보조 입력**")
+    st.sidebar.write("KOSPI · Bitcoin")
+
+    st.sidebar.markdown("**예측 방식**")
+    st.sidebar.write(
+        "XGBoost 회귀 → 로그수익률 예측 → 부호로 방향 평가"
+    )
+
+    st.sidebar.markdown("**파이프라인 구조**")
+    st.sidebar.write(
+        "수집 → 저장 → Feature → 심리 proxy → "
+        "학습 → 백테스트 → 표출"
+    )
+
+    st.sidebar.caption(
+        "공식 백테스트와 최신 데이터 기반 최근 1회 예측을 "
+        "분리한 부분 자동화 구조입니다."
+    )
+    
 def render_sentiment_sidebar() -> None:
     """
     심리지표 탭에서 사용하는 삼성전자 고정 사이드바입니다.
@@ -239,9 +269,10 @@ def main() -> None:
     initialize_session_state()
     render_dashboard_header()
 
-    overview_tab, data_tab, sentiment_tab, modeling_tab = st.tabs(
+    overview_tab, dataflow_tab, data_tab, sentiment_tab, modeling_tab = st.tabs(
         [
             "프로젝트 소개",
+            "DataFlow",
             "데이터 전처리",
             "심리지표",
             "모델링/검증",
@@ -253,13 +284,16 @@ def main() -> None:
     
     if modeling_tab.open:
         render_modeling_sidebar()
-
+    
     elif sentiment_tab.open:
         render_sentiment_sidebar()
-
+    
     elif data_tab.open:
         render_default_sidebar()
-
+    
+    elif dataflow_tab.open:
+        render_dataflow_sidebar()
+    
     else:
         render_overview_sidebar()
 
@@ -274,15 +308,11 @@ def main() -> None:
             unsafe_allow_html=True,
         )
 
-        render_process_flow()
-
-        st.markdown(
-            "<div style='height: 32px;'></div>",
-            unsafe_allow_html=True,
-        )
-
         render_experiment_summary()
-
+    
+    with dataflow_tab:
+        render_process_flow()
+    
     # -----------------------------------------------------
     # 데이터 전처리
     # -----------------------------------------------------
