@@ -3,7 +3,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 DATAFLOW_DIR = PROJECT_ROOT / "quantmodel01_dataflow"
-DATAFLOW_IMAGE_DIR = DATAFLOW_DIR / "images"
+# DATAFLOW_IMAGE_DIR = DATAFLOW_DIR / "images"
 DATAFLOW_DOCUMENT_DIR = DATAFLOW_DIR / "documents"
 
 TITLE_IMAGE = DATAFLOW_IMAGE_DIR / "01_title.png"
@@ -11,10 +11,9 @@ FRAMEWORK_IMAGE = DATAFLOW_IMAGE_DIR / "02_framework.png"
 DATA_COLLECTION_IMAGE = DATAFLOW_IMAGE_DIR / "03_data_collection.png"
 PROXY_IMAGE = DATAFLOW_IMAGE_DIR / "04_proxy_generation.png"
 XGBOOST_IMAGE = DATAFLOW_IMAGE_DIR / "05_xgboost_regression.png"
-REGRESSION_IMAGE = DATAFLOW_IMAGE_DIR / "06_regression_method.png"
-DIRECTION_IMAGE = DATAFLOW_IMAGE_DIR / "07_direction_evaluation.png"
-SYSTEM_IMAGE = DATAFLOW_IMAGE_DIR / "08_system_layers.png"
-RESULT_IMAGE = DATAFLOW_IMAGE_DIR / "09_result_summary.png"
+SIGN_IMAGE = DATAFLOW_IMAGE_DIR / "06_sign_comparison.png"
+DIRECTION_IMAGE = DATAFLOW_IMAGE_DIR / "07_direction_accuracy.png"
+
 
 PLAN_DOCUMENT = (
     DATAFLOW_DOCUMENT_DIR
@@ -50,85 +49,85 @@ DOCUMENT_DIR = DATAFLOW_ROOT / "documents"
 # 화면에 표시할 이미지 순서
 # 실제 파일명이 다르면 path 값만 수정한다.
 # =========================================================
-IMAGE_SECTIONS = [
-    {
-        "title": "1. 연구 아키텍처 개요",
-        "path": IMAGE_DIR / "01_title.png",
-        "caption": (
-            "가격 관련 요인을 통제한 residual과 PCA 기반 심리 proxy를 "
-            "이용하여 삼성전자 다음 주 로그수익률을 예측하는 전체 연구 구조입니다."
-        ),
-    },
-    {
-        "title": "2. 연구 프레임워크",
-        "path": IMAGE_DIR / "02_framework.png",
-        "caption": (
-            "삼성전자·KOSPI·Bitcoin 주봉 자료를 수집하고, "
-            "삼성전자 심리 proxy를 생성한 뒤 XGBoost 회귀모델로 "
-            "다음 주 로그수익률을 예측합니다."
-        ),
-    },
-    {
-        "title": "3. 데이터 수집 및 정합성 확보",
-        "path": IMAGE_DIR / "03_data_collection.png",
-        "caption": (
-            "세 자산의 주봉 OHLCV를 수집하고 날짜 정렬, 결측치 확인, "
-            "워밍업 구간 확보와 캐시 저장을 수행합니다."
-        ),
-    },
-    {
-        "title": "4. 심리 proxy 생성",
-        "path": IMAGE_DIR / "04_proxy_generation.png",
-        "caption": (
-            "삼성전자 ATR·MFI·Stochastic에서 RET·MOM·VOL로 설명되는 "
-            "부분을 통제하여 residual 3개를 만들고, 표준화와 PCA를 통해 "
-            "Investor_Sentiment_PC1을 생성합니다."
-        ),
-    },
-    {
-        "title": "5. XGBoost 로그수익률 회귀 학습",
-        "path": IMAGE_DIR / "05_xgboost_regression.png",
-        "caption": (
-            "모델은 상승·하락 확률을 직접 출력하는 분류모델이 아니라, "
-            "삼성전자 다음 주 연속형 로그수익률을 예측하는 XGBoost 회귀모델입니다."
-        ),
-    },
-    {
-        "title": "6. 분류가 아닌 회귀 설계를 사용한 이유",
-        "path": IMAGE_DIR / "06_regression_method.png",
-        "caption": (
-            "연속형 로그수익률을 예측하여 R²·RMSE·MAE를 평가하고, "
-            "예측값과 실제값의 부호가 일치하는지를 이용해 "
-            "Directional Accuracy를 추가로 계산합니다."
-        ),
-    },
-    {
-        "title": "7. 부호 기반 방향성 평가",
-        "path": IMAGE_DIR / "07_direction_evaluation.png",
-        "caption": (
-            "예측 로그수익률과 실제 로그수익률의 부호가 같으면 적중, "
-            "다르면 실패로 판정합니다. 이는 확률값이 아니라 "
-            "회귀 예측값의 부호를 이용한 사후 방향 평가입니다."
-        ),
-    },
-    {
-        "title": "8. 시스템 계층과 처리 역할",
-        "path": IMAGE_DIR / "08_system_layers.png",
-        "caption": (
-            "데이터 수집, 저장, 처리·분석, Streamlit 표출 계층을 구분하여 "
-            "공식 백테스트와 최신 데이터 기반 추론의 역할을 설명합니다."
-        ),
-    },
-    {
-        "title": "9. 실험 결과와 해석",
-        "path": IMAGE_DIR / "09_result_summary.png",
-        "caption": (
-            "통합 심리 proxy는 Price-only 대비 추가 적중을 만들지 못했고, "
-            "ATR·MFI residual 단독형에서만 58주 중 1건의 제한적인 개선이 "
-            "관찰됐습니다."
-        ),
-    },
-]
+# IMAGE_SECTIONS = [
+#     {
+#         "title": "1. 연구 아키텍처 개요",
+#         "path": IMAGE_DIR / "01_title.png",
+#         "caption": (
+#             "가격 관련 요인을 통제한 residual과 PCA 기반 심리 proxy를 "
+#             "이용하여 삼성전자 다음 주 로그수익률을 예측하는 전체 연구 구조입니다."
+#         ),
+#     },
+#     {
+#         "title": "2. 연구 프레임워크",
+#         "path": IMAGE_DIR / "02_framework.png",
+#         "caption": (
+#             "삼성전자·KOSPI·Bitcoin 주봉 자료를 수집하고, "
+#             "삼성전자 심리 proxy를 생성한 뒤 XGBoost 회귀모델로 "
+#             "다음 주 로그수익률을 예측합니다."
+#         ),
+#     },
+#     {
+#         "title": "3. 데이터 수집 및 정합성 확보",
+#         "path": IMAGE_DIR / "03_data_collection.png",
+#         "caption": (
+#             "세 자산의 주봉 OHLCV를 수집하고 날짜 정렬, 결측치 확인, "
+#             "워밍업 구간 확보와 캐시 저장을 수행합니다."
+#         ),
+#     },
+#     {
+#         "title": "4. 심리 proxy 생성",
+#         "path": IMAGE_DIR / "04_proxy_generation.png",
+#         "caption": (
+#             "삼성전자 ATR·MFI·Stochastic에서 RET·MOM·VOL로 설명되는 "
+#             "부분을 통제하여 residual 3개를 만들고, 표준화와 PCA를 통해 "
+#             "Investor_Sentiment_PC1을 생성합니다."
+#         ),
+#     },
+#     {
+#         "title": "5. XGBoost 로그수익률 회귀 학습",
+#         "path": IMAGE_DIR / "05_xgboost_regression.png",
+#         "caption": (
+#             "모델은 상승·하락 확률을 직접 출력하는 분류모델이 아니라, "
+#             "삼성전자 다음 주 연속형 로그수익률을 예측하는 XGBoost 회귀모델입니다."
+#         ),
+#     },
+#     {
+#         "title": "6. 분류가 아닌 회귀 설계를 사용한 이유",
+#         "path": IMAGE_DIR / "06_regression_method.png",
+#         "caption": (
+#             "연속형 로그수익률을 예측하여 R²·RMSE·MAE를 평가하고, "
+#             "예측값과 실제값의 부호가 일치하는지를 이용해 "
+#             "Directional Accuracy를 추가로 계산합니다."
+#         ),
+#     },
+#     {
+#         "title": "7. 부호 기반 방향성 평가",
+#         "path": IMAGE_DIR / "07_direction_evaluation.png",
+#         "caption": (
+#             "예측 로그수익률과 실제 로그수익률의 부호가 같으면 적중, "
+#             "다르면 실패로 판정합니다. 이는 확률값이 아니라 "
+#             "회귀 예측값의 부호를 이용한 사후 방향 평가입니다."
+#         ),
+#     },
+#     {
+#         "title": "8. 시스템 계층과 처리 역할",
+#         "path": IMAGE_DIR / "08_system_layers.png",
+#         "caption": (
+#             "데이터 수집, 저장, 처리·분석, Streamlit 표출 계층을 구분하여 "
+#             "공식 백테스트와 최신 데이터 기반 추론의 역할을 설명합니다."
+#         ),
+#     },
+#     {
+#         "title": "9. 실험 결과와 해석",
+#         "path": IMAGE_DIR / "09_result_summary.png",
+#         "caption": (
+#             "통합 심리 proxy는 Price-only 대비 추가 적중을 만들지 못했고, "
+#             "ATR·MFI residual 단독형에서만 58주 중 1건의 제한적인 개선이 "
+#             "관찰됐습니다."
+#         ),
+#     },
+# ]
 
 
 DOCUMENTS = [
@@ -204,26 +203,26 @@ def _render_core_definition() -> None:
     )
 
 
-def _render_image_section(
-    title: str,
-    image_path: Path,
-    caption: str,
-) -> None:
-    """개별 DataFlow 이미지를 설명과 함께 표시한다."""
-    st.subheader(title)
+# def _render_image_section(
+#     title: str,
+#     image_path: Path,
+#     caption: str,
+# ) -> None:
+#     """개별 DataFlow 이미지를 설명과 함께 표시한다."""
+#     st.subheader(title)
 
-    if image_path.exists():
-        st.image(
-            str(image_path),
-            use_container_width=True,
-        )
+#     if image_path.exists():
+#         st.image(
+#             str(image_path),
+#             use_container_width=True,
+#         )
 
-        st.caption(caption)
+#         st.caption(caption)
 
-    else:
-        st.warning(
-            f"이미지 파일을 찾지 못했습니다: {image_path.name}"
-        )
+#     else:
+#         st.warning(
+#             f"이미지 파일을 찾지 못했습니다: {image_path.name}"
+#         )
 
 
 def _render_dual_flow() -> None:
