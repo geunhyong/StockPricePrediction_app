@@ -263,7 +263,7 @@ def _build_latest_summary(
             {
                 "항목": "Investor Sentiment PC1",
                 "값": f"{latest[SENTIMENT_COLUMN]:.6f}",
-                "해석": "보성님 최종 산출물에 저장된 residual 3개의 통합 심리 proxy",
+                "해석": "최종 산출물에 저장된 residual 3개의 통합 심리 proxy",
             },
         ]
     )
