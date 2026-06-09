@@ -9,6 +9,13 @@ DATAFLOW_DIR = PROJECT_ROOT / "quantmodel01_dataflow"
 DATAFLOW_IMAGE_DIR = DATAFLOW_DIR / "images"
 DATAFLOW_DOCUMENT_DIR = DATAFLOW_DIR / "documents"
 
+TITLE_IMAGE = DATAFLOW_IMAGE_DIR / "01_title.png"
+FRAMEWORK_IMAGE = DATAFLOW_IMAGE_DIR / "02_framework.png"
+DATA_COLLECTION_IMAGE = DATAFLOW_IMAGE_DIR / "03_data_collection.png"
+PROXY_IMAGE = DATAFLOW_IMAGE_DIR / "04_proxy_generation.png"
+XGBOOST_IMAGE = DATAFLOW_IMAGE_DIR / "05_xgboost_regression.png"
+SIGN_IMAGE = DATAFLOW_IMAGE_DIR / "06_sign_comparison.png"
+DIRECTION_IMAGE = DATAFLOW_IMAGE_DIR / "07_direction_accuracy.png"
 
 # =========================================================
 # DataFlow 이미지
